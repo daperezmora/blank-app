@@ -3,6 +3,7 @@ import requests
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import pytz
+import time
 
 # Variables para el ID del sensor y el token
 token = '9b56e023d84c4c0e9af2d0ee95549392'
@@ -62,12 +63,19 @@ def display_data():
     else:
         st.info("Sin datos disponibles para el rango de tiempo especificado.")
 
-# Configurar la actualización automática del dashboard
-st.button("Actualizar Datos", on_click=display_data)
+# Actualización automática del dashboard cada cierto tiempo
+def auto_update(interval=60):
+    while True:
+        display_data()
+        time.sleep(interval)
 
-# Automáticamente actualizar el dashboard cada minuto
-st.experimental_set_query_params(auto_refresh="true")
-st.experimental_rerun()
+# Botón para actualizar los datos manualmente
+if st.button("Actualizar Datos"):
+    display_data()
 
 # Mostrar los datos al cargar la página
 display_data()
+
+# Actualización automática (puedes ajustar el intervalo en segundos)
+if st.checkbox("Actualizar automáticamente cada 60 segundos"):
+    auto_update(60)
